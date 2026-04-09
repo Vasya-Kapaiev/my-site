@@ -3,199 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система Kapaiev v4.0</title>
+    <title>KAPAIEV OS v4.1</title>
     <style>
-        body {
-            background: #000;
-            color: #fff;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden; /* Матрица требует этого */
-            position: relative;
-        }
-
-        /* Сканирующая линия */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: rgba(0, 255, 157, 0.4);
-            box-shadow: 0 0 20px #00ff9d;
-            animation: scan 4s linear infinite;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        @keyframes scan {
-            0% { top: -10%; }
-            100% { top: 110%; }
-        }
-
-        /* Фон "Матрица" */
-        canvas#matrix {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* Позади контента */
-            opacity: 0.15; /* Легкий фон, чтобы не мешать тексту */
-        }
-
-        .container {
-            text-align: center;
-            padding: 40px;
-            border: 1px solid #00ff9d;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.85); /* Более плотный фон для читаемости */
-            box-shadow: 0 0 40px rgba(0, 255, 157, 0.1);
-            max-width: 600px;
-            width: 90%;
-            margin: 20px;
-            position: relative;
-            z-index: 10; /* Поверх Матрицы */
-        }
-
-        h1 {
-            font-size: 2.2em;
-            color: #00ff9d;
-            text-shadow: 0 0 10px #00ff9d;
-            margin-bottom: 5px;
-        }
-
-        .mission {
-            margin: 15px 0;
-            font-size: 1.1em;
-            color: #00d1ff;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* Блок навыков */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .skill-item {
-            border: 1px solid #333;
-            padding: 10px;
-            border-radius: 5px;
-            transition: 0.3s;
-            font-size: 0.9em;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Мощное свечение при наведении */
-        .skill-item:hover {
-            border-color: #00ff9d;
-            background: rgba(0, 255, 157, 0.1);
-            color: #fff;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 0 20px rgba(0, 255, 157, 0.6), 
-                        0 0 40px rgba(0, 255, 157, 0.3) inset;
-            text-shadow: 0 0 5px #fff;
-        }
-
-        .buy-button {
-            background: #00ff9d;
-            padding: 18px 35px;
-            color: #000;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
-            transition: 0.3s;
-            box-shadow: 0 0 15px #00ff9d;
-            text-transform: uppercase;
-            margin-top: 10px;
-        }
-
-        .buy-button:hover {
-            background: #fff;
-            box-shadow: 0 0 30px #fff;
-            transform: scale(1.05);
-        }
+        body { background: #000; margin: 0; overflow: hidden; font-family: 'Courier New', monospace; color: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.3; }
+        .container { position: relative; z-index: 10; text-align: center; background: rgba(0, 0, 0, 0.8); padding: 30px; border: 2px solid #00ff9d; border-radius: 10px; box-shadow: 0 0 30px #00ff9d; max-width: 500px; width: 90%; }
+        h1 { color: #00ff9d; text-shadow: 0 0 10px #00ff9d; letter-spacing: 3px; }
+        .mission { color: #00d1ff; margin: 20px 0; font-weight: bold; font-size: 1.1em; }
+        .skills { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+        .skill { border: 1px solid #444; padding: 8px; border-radius: 4px; transition: 0.3s; cursor: crosshair; }
+        .skill:hover { border-color: #00ff9d; background: rgba(0, 255, 157, 0.1); box-shadow: 0 0 15px #00ff9d; transform: scale(1.05); }
+        .btn { background: #00ff9d; color: #000; padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; box-shadow: 0 0 15px #00ff9d; display: inline-block; transition: 0.3s; }
+        .btn:hover { background: #fff; box-shadow: 0 0 25px #fff; }
     </style>
 </head>
 <body>
 
-<canvas id="matrix"></canvas>
+<canvas id="m"></canvas>
 
 <div class="container">
     <h1>KAPAIEV_SYSTEM</h1>
-    <p>Статус: <span style="color:#00ff9d;">В СЕТИ</span></p>
-    
     <div class="mission">ЦЕЛЬ: ДОМ И МАШИНА К 20 ГОДАМ</div>
-
-    <div class="skills-grid">
-        <div class="skill-item">РАЗРАБОТКА САЙТОВ</div>
-        <div class="skill-item">HTML5 / CSS3 / JS</div>
-        <div class="skill-item">UI/UX ДИЗАЙН</div>
-        <div class="skill-item">ТЕЛЕГРАМ БОТЫ</div>
+    <div class="skills">
+        <div class="skill">WEB_DEV</div>
+        <div class="skill">HTML/CSS/JS</div>
+        <div class="skill">UI_DESIGN</div>
+        <div class="skill-item" style="border: 1px solid #444; padding: 8px; border-radius: 4px;">TG_BOTS</div>
     </div>
-
-    <a href="https://t.me/Vasya_Kapaiev" class="buy-button">ОТПРАВИТЬ ЗАПРОС</a>
+    <a href="https://t.me/Vasya_Kapaiev" class="btn">ОТПРАВИТЬ ЗАПРОС</a>
 </div>
 
 <script>
-    const canvas = document.getElementById('matrix');
+    const canvas = document.getElementById('m');
     const ctx = canvas.getContext('2d');
-
-    // Настройка размеров
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    // Символы
-    const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const nums = '0123456789';
-    const alphabet = katakana + latin + nums;
-
+    const char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const fontSize = 16;
     const columns = canvas.width / fontSize;
-
-    // Массив для хранения координат капель
-    const rainDrops = [];
-
-    for( let x = 0; x < columns; x++ ) {
-        rainDrops[x] = 1;
-    }
-
-    // Отрисовка
-    const drawMatrix = () => {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Полупрозрачный фон для эффекта хвоста
+    const drops = Array(Math.floor(columns)).fill(1);
+    function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = '#0F0'; // Цвет текста
-        ctx.font = fontSize + 'px monospace';
-
-        for(let i = 0; i < rainDrops.length; i++) {
-            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.alphabet.length));
-            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-
-            if(rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975){
-                rainDrops[i] = 0;
-            }
-            rainDrops[i]++;
+        ctx.fillStyle = "#0F0";
+        ctx.font = fontSize + "px monospace";
+        for (let i = 0; i < drops.length; i++) {
+            const text = char[Math.floor(Math.random() * char.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
         }
-    };
-
-    // Анимация
-    setInterval(drawMatrix, 30);
-
-    // Обновление размера при изменении окна
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
+    }
+    setInterval(draw, 33);
 </script>
 
 </body>
